@@ -1,5 +1,6 @@
 package com.project.algorithms;
 
+import com.project.algorithms.ga.binary.FunctionType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ public class BinaryGeneticAlgorithmLongRunningUnitTest {
     @Test
     public void testGA() {
         SimpleGeneticAlgorithm ga = new SimpleGeneticAlgorithm();
-        Assert.assertTrue(ga.runAlgorithm(50, "1011000100000100010000100000100111001000000100000100000000001111"));
+        Assert.assertTrue(ga.runAlgorithm(5, FunctionType.ABSOLUTE_X_MINUS_2));
     }
 
 }
