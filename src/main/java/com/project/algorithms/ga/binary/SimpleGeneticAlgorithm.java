@@ -6,33 +6,27 @@ import lombok.Data;
 public class SimpleGeneticAlgorithm {
 
     private static FunctionType functionType;
-    private static final double uniformRate = 0.5;
-    private static final double mutationRate = 0.025;
-    private static final int tournamentSize = 5;
-    private static final boolean elitism = true;
-    private static final int maxGeneration = 10000;
-    private static byte[] solution;
+    private static int generationNumber;
+    private static double mutationRate;
 
-    public boolean runAlgorithm(int populationSize, FunctionType function) {
+    private static final double uniformRate = 0.5;
+    private static final int tournamentSize = 5;
+
+    public boolean runAlgorithm(FunctionType function, int populationSize, int generations, double mutateRate) {
         functionType = function;
-        int range = functionType.getEndPoint() - functionType.getStartPoint();
-        solution = new byte[range];
+        generationNumber = generations;
+        mutationRate = mutateRate;
         Population myPop = new Population(populationSize, true);
         showPopulation(myPop);
         System.out.println("---------------------START---------------------");
         int generationCount = 1;
-        while (myPop.getBest().getFunctionValue() < functionType.getMaxValue()) {
+        while (generationCount <= generationNumber) {
             System.out.println("Generation: " + generationCount
                     + " Best found value: " + myPop.getBest().getFunctionValue()
                     + " (x = " + myPop.getBest().getDecimalValue() + ")");
             myPop = evolvePopulation(myPop);
             showPopulation(myPop);
             generationCount++;
-            if (generationCount > maxGeneration) {
-                System.out.println("Solution was not found! " +
-                        "The maximum number of generations has been reached...");
-                return false;
-            }
         }
         System.out.println("Solution found!");
         System.out.println("Generation: " + generationCount
@@ -49,24 +43,16 @@ public class SimpleGeneticAlgorithm {
     }
 
     public Population evolvePopulation(Population pop) {
-        int elitismOffset;
         Population newPopulation = new Population(pop.getChromosomes().size(), false);
 
-        if (elitism) {
-            newPopulation.getChromosomes().add(0, pop.getBest());
-            elitismOffset = 1;
-        } else {
-            elitismOffset = 0;
-        }
-
-        for (int i = elitismOffset; i < pop.getChromosomes().size(); i++) {
+        for (int i = 0; i < pop.getChromosomes().size(); i++) {
             Chromosome indiv1 = tournamentSelection(pop);
             Chromosome indiv2 = tournamentSelection(pop);
             Chromosome newIndiv = crossover(indiv1, indiv2);
             newPopulation.getChromosomes().add(i, newIndiv);
         }
 
-        for (int i = elitismOffset; i < newPopulation.getChromosomes().size(); i++) {
+        for (int i = 0; i < newPopulation.getChromosomes().size(); i++) {
             mutate(newPopulation.getChromosome(i));
         }
         return newPopulation;
@@ -84,11 +70,12 @@ public class SimpleGeneticAlgorithm {
         return newSol;
     }
 
-    private void mutate(Chromosome indiv) {
+    private void mutate(Chromosome chromosome) {
         for (int i = 0; i < Chromosome.CHROMOSOME_LENGTH; i++) {
             if (Math.random() <= mutationRate) {
-                byte gene = (byte) Math.round(Math.random());
-                indiv.setSingleGene(i, gene);
+                byte actualGene = chromosome.getSingleGene(i);
+                byte newGene = actualGene == 0 ? (byte) 1 : 0;
+                chromosome.setSingleGene(i, newGene);
             }
         }
     }

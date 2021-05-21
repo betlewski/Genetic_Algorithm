@@ -7,7 +7,7 @@ public class RunAlgorithm {
 
     public static void main(String[] args) {
         SimpleGeneticAlgorithm ga = new SimpleGeneticAlgorithm();
-        ga.runAlgorithm(3, FunctionType.ABSOLUTE_X_MINUS_2);
+        ga.runAlgorithm(FunctionType.ABSOLUTE_X_MINUS_2, 5, 100, 0.025);
     }
 
 }
