@@ -12,7 +12,7 @@ public class Chromosome {
     private boolean actualFunctionValue = false;
 
     public Chromosome() {
-        for (int i = 0; i < genes.length; i++) {
+        for (int i = 0; i < CHROMOSOME_LENGTH; i++) {
             byte gene = (byte) Math.round(Math.random());
             genes[i] = gene;
         }
@@ -51,7 +51,7 @@ public class Chromosome {
     public double getDecimalValue() {
         double value = 0;
         int factor = 1;
-        for (int i = 1; i < genes.length; i++) {
+        for (int i = 1; i < CHROMOSOME_LENGTH; i++) {
             double unit = Math.pow(2, factor) * getSingleGene(i);
             value += unit;
             factor--;
@@ -66,7 +66,7 @@ public class Chromosome {
     @Override
     public String toString() {
         StringBuilder geneString = new StringBuilder();
-        for (int i = 0; i < genes.length; i++) {
+        for (int i = 0; i < CHROMOSOME_LENGTH; i++) {
             geneString.append(getSingleGene(i));
         }
         return geneString.toString();

@@ -11,7 +11,7 @@ public class BinaryGeneticAlgorithmLongRunningUnitTest {
     @Test
     public void testGA() {
         SimpleGeneticAlgorithm ga = new SimpleGeneticAlgorithm();
-        Assert.assertTrue(ga.runAlgorithm(5, FunctionType.ABSOLUTE_X_MINUS_2));
+        Assert.assertTrue(ga.runAlgorithm(FunctionType.ABSOLUTE_X_MINUS_2, 5, 100, 0.5, 0.025));
     }
 
 }
