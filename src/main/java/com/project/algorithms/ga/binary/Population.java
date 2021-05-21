@@ -17,24 +17,25 @@ public class Population {
         }
     }
 
-    protected Chromosome getChromosome(int index) {
-        return chromosomes.get(index);
-    }
-
-    protected Chromosome getFittest() {
-        Chromosome fittest = chromosomes.get(0);
-        for (int i = 1; i < chromosomes.size(); i++) {
-            if (getChromosome(i).getFitness() < fittest.getFitness()) {
-                fittest = getChromosome(i);
-            }
-        }
-        return fittest;
-    }
-
     private void createNewPopulation(int size) {
         for (int i = 0; i < size; i++) {
             Chromosome newChromosome = new Chromosome();
             chromosomes.add(i, newChromosome);
         }
     }
+
+    protected Chromosome getChromosome(int index) {
+        return chromosomes.get(index);
+    }
+
+    protected Chromosome getBest() {
+        Chromosome minimum = chromosomes.get(0);
+        for (int i = 1; i < chromosomes.size(); i++) {
+            if (getChromosome(i).getFunctionValue() < minimum.getFunctionValue()) {
+                minimum = getChromosome(i);
+            }
+        }
+        return minimum;
+    }
+
 }

@@ -7,7 +7,9 @@ public class Chromosome {
 
     public static final int CHROMOSOME_LENGTH = 10;
     private byte[] genes = new byte[CHROMOSOME_LENGTH];
-    private double fitness = 0;
+
+    private double functionValue = 0;
+    private boolean actualFunctionValue = false;
 
     public Chromosome() {
         for (int i = 0; i < genes.length; i++) {
@@ -22,14 +24,15 @@ public class Chromosome {
 
     protected void setSingleGene(int index, byte value) {
         genes[index] = value;
-        fitness = 0;
+        actualFunctionValue = false;
     }
 
-    public double getFitness() {
-        if (fitness == 0) {
-            fitness = SimpleGeneticAlgorithm.getFitness(this);
+    public double getFunctionValue() {
+        if (!actualFunctionValue) {
+            functionValue = SimpleGeneticAlgorithm.getFunctionValue(this);
+            actualFunctionValue = true;
         }
-        return fitness;
+        return functionValue;
     }
 
     /**

@@ -21,10 +21,10 @@ public class SimpleGeneticAlgorithm {
         showPopulation(myPop);
         System.out.println("---------------------START---------------------");
         int generationCount = 1;
-        while (myPop.getFittest().getFitness() < functionType.getMaxValue()) {
+        while (myPop.getBest().getFunctionValue() < functionType.getMaxValue()) {
             System.out.println("Generation: " + generationCount
-                    + " Best found value: " + myPop.getFittest().getFitness()
-                    + " (x = " + myPop.getFittest().getDecimalValue() + ")");
+                    + " Best found value: " + myPop.getBest().getFunctionValue()
+                    + " (x = " + myPop.getBest().getDecimalValue() + ")");
             myPop = evolvePopulation(myPop);
             showPopulation(myPop);
             generationCount++;
@@ -36,8 +36,8 @@ public class SimpleGeneticAlgorithm {
         }
         System.out.println("Solution found!");
         System.out.println("Generation: " + generationCount
-                + " Best found value: " + myPop.getFittest().getFitness()
-                + " (x = " + myPop.getFittest().getDecimalValue() + ")");
+                + " Best found value: " + myPop.getBest().getFunctionValue()
+                + " (x = " + myPop.getBest().getDecimalValue() + ")");
         return true;
     }
 
@@ -53,7 +53,7 @@ public class SimpleGeneticAlgorithm {
         Population newPopulation = new Population(pop.getChromosomes().size(), false);
 
         if (elitism) {
-            newPopulation.getChromosomes().add(0, pop.getFittest());
+            newPopulation.getChromosomes().add(0, pop.getBest());
             elitismOffset = 1;
         } else {
             elitismOffset = 0;
@@ -99,10 +99,10 @@ public class SimpleGeneticAlgorithm {
             int randomId = (int) (Math.random() * pop.getChromosomes().size());
             tournament.getChromosomes().add(i, pop.getChromosome(randomId));
         }
-        return tournament.getFittest();
+        return tournament.getBest();
     }
 
-    protected static double getFitness(Chromosome chromosome) {
+    protected static double getFunctionValue(Chromosome chromosome) {
         return FunctionUtils.getValueInPoint(functionType, chromosome.getDecimalValue());
     }
 
