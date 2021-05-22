@@ -1,31 +1,33 @@
 package com.project.algorithms.ga.binary;
 
+/**
+ * Function types to chosen for optimization.
+ */
 public enum FunctionType {
 
-    ABSOLUTE_X_MINUS_2(0, 15, 13),
-    MINUS_X_TO_THE_POWER_OF_2(0, 15, 0),
-    EXPONENTIAL_FOR_2(0, 15, 32768);
+    ACKLEYS("Ackley's", 15),
+    BOOTHS("Booth's", 900),
+    THREE_HUMP_CAMEL("Three-hump camel", 2200);
 
-    private final Integer startPoint;
-    private final Integer endPoint;
-    private final Integer maxValue;
+    private final String name;
+    private final double maxYRange;
 
-    FunctionType(Integer startPoint, Integer endPoint, Integer maxValue) {
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
-        this.maxValue = maxValue;
+    FunctionType(String name, double maxYRange) {
+        this.name = name;
+        this.maxYRange = maxYRange;
     }
 
-    public Integer getStartPoint() {
-        return startPoint;
+    public String getName() {
+        return name;
     }
 
-    public Integer getEndPoint() {
-        return endPoint;
+    public double getMaxYRange() {
+        return maxYRange;
     }
 
-    public Integer getMaxValue() {
-        return maxValue;
+    @Override
+    public String toString() {
+        return this.name;
     }
 
 }

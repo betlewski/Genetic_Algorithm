@@ -13,7 +13,7 @@ public class SimpleGeneticAlgorithm {
     private static double crossoverRate;
     private static double mutationRate;
 
-    public boolean runAlgorithm(FunctionType function, int populationValue, int generations, double crossRate, double mutateRate) {
+    public void runAlgorithm(FunctionType function, int populationValue, int generations, double crossRate, double mutateRate) {
         functionType = function;
         populationSize = populationValue;
         generationNumber = generations;
@@ -35,17 +35,16 @@ public class SimpleGeneticAlgorithm {
         System.out.println("Generation: " + generationCount
                 + " Best found value: " + myPop.getBest().getFunctionValue()
                 + " (x = " + myPop.getBest().getDecimalValue() + ")");
-        return true;
     }
 
-    public void showPopulation(Population population) {
+    private void showPopulation(Population population) {
         for (int i = 0; i < populationSize; i++) {
             System.out.println("Chromosome " + (i + 1) + ": " + population.getChromosome(i).toString()
                     + " (" + population.getChromosome(i).getDecimalValue() + ")");
         }
     }
 
-    public Population evolvePopulation(Population population) {
+    private Population evolvePopulation(Population population) {
         Population population1 = rouletteWheelSelection(population);
         Population population2 = crossover(population1);
         mutate(population2);
@@ -70,6 +69,10 @@ public class SimpleGeneticAlgorithm {
             }
         }
         return newPopulation;
+    }
+
+    private double getFunctionValue(Chromosome chromosome) {
+        return FunctionUtils.getValueInPoint(functionType, chromosome.getDecimalValue());
     }
 
     private Population crossover(Population population) {
@@ -117,10 +120,6 @@ public class SimpleGeneticAlgorithm {
                 }
             }
         }
-    }
-
-    protected static double getFunctionValue(Chromosome chromosome) {
-        return FunctionUtils.getValueInPoint(functionType, chromosome.getDecimalValue());
     }
 
 }
