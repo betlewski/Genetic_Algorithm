@@ -6,14 +6,14 @@ import lombok.Data;
 public class SimpleGeneticAlgorithm {
 
     private static FunctionType functionType;
+    private static int populationSize;
     private static int generationNumber;
     private static double crossoverRate;
     private static double mutationRate;
 
-    private static final int tournamentSize = 5;
-
-    public boolean runAlgorithm(FunctionType function, int populationSize, int generations, double crossRate, double mutateRate) {
+    public boolean runAlgorithm(FunctionType function, int populationValue, int generations, double crossRate, double mutateRate) {
         functionType = function;
+        populationSize = populationValue;
         generationNumber = generations;
         crossoverRate = crossRate;
         mutationRate = mutateRate;
@@ -37,27 +37,40 @@ public class SimpleGeneticAlgorithm {
     }
 
     public void showPopulation(Population population) {
-        for (int i = 0; i < population.getChromosomes().size(); i++) {
+        for (int i = 0; i < populationSize; i++) {
             System.out.println("Chromosome " + (i + 1) + ": " + population.getChromosome(i).toString()
                     + " (" + population.getChromosome(i).getDecimalValue() + ")");
         }
     }
 
     public Population evolvePopulation(Population population) {
-        int populationSize = population.getChromosomes().size();
         Population newPopulation = new Population(populationSize, false);
+        rouletteWheelSelection(population, newPopulation);
+//        crossover();
 
-        for (int i = 0; i < population.getChromosomes().size(); i++) {
-            Chromosome indiv1 = tournamentSelection(population);
-            Chromosome indiv2 = tournamentSelection(population);
-            crossover(indiv1, indiv2);
-            newPopulation.getChromosomes().add(i, indiv1);
-        }
-
-        for (int i = 0; i < newPopulation.getChromosomes().size(); i++) {
+        for (int i = 0; i < populationSize; i++) {
             mutate(newPopulation.getChromosome(i));
         }
         return newPopulation;
+    }
+
+    private void rouletteWheelSelection(Population oldPopulation, Population newPopulation) {
+        double totalSum = 0;
+        for (int i = 0; i < populationSize; i++) {
+            totalSum += getFunctionValue(oldPopulation.getChromosome(i));
+        }
+        for (int j = 0; j < populationSize; j++) {
+            double random = Math.random() * totalSum;
+            double partialSum = 0;
+            for (int i = 0; i < populationSize; i++) {
+                partialSum += getFunctionValue(oldPopulation.getChromosome(i));
+                if (partialSum >= random) {
+                    Chromosome drawnChromosome = oldPopulation.getChromosome(i);
+                    newPopulation.getChromosomes().add(drawnChromosome);
+                    break;
+                }
+            }
+        }
     }
 
     private void crossover(Chromosome chromosome1, Chromosome chromosome2) {
@@ -79,15 +92,6 @@ public class SimpleGeneticAlgorithm {
                 chromosome.setSingleGene(i, newGene);
             }
         }
-    }
-
-    private Chromosome tournamentSelection(Population pop) {
-        Population tournament = new Population(tournamentSize, false);
-        for (int i = 0; i < tournamentSize; i++) {
-            int randomId = (int) (Math.random() * pop.getChromosomes().size());
-            tournament.getChromosomes().add(i, pop.getChromosome(randomId));
-        }
-        return tournament.getBest();
     }
 
     protected static double getFunctionValue(Chromosome chromosome) {
