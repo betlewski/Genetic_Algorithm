@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.Controller">
+    <Button fx:id="startButton" layoutX="248.0" layoutY="672.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="180.0" style="-fx-background-radius: 100;" text="START" />
+    <Label layoutX="114.0" layoutY="180.0" prefHeight="17.0" prefWidth="130.0" text="Population size:" />
+    <ComboBox fx:id="functionComboBox" layoutX="337.0" layoutY="100.0" prefHeight="30.0" prefWidth="250.0" />
+    <Slider fx:id="populationSlider" accessibleText="Population size:" layoutX="111.0" layoutY="204.0" majorTickUnit="20.0" minorTickCount="4" prefHeight="40.0" prefWidth="700.0" showTickLabels="true" showTickMarks="true" value="5.0" />
+    <Slider fx:id="generationSlider" layoutX="113.0" layoutY="293.0" majorTickUnit="20.0" minorTickCount="4" prefHeight="40.0" prefWidth="700.0" showTickLabels="true" showTickMarks="true" value="10.0" />
+    <ProgressBar fx:id="progressBar" layoutX="113.0" layoutY="600.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="700.0" progress="0.0" />
+    <Slider fx:id="crossoverSlider" layoutX="115.0" layoutY="384.0" majorTickUnit="0.2" max="1.0" minorTickCount="1" prefHeight="40.0" prefWidth="320.0" showTickLabels="true" showTickMarks="true" value="0.5" />
+    <Slider fx:id="mutationSlider" layoutX="494.0" layoutY="383.0" majorTickUnit="0.2" max="1.0" minorTickCount="1" prefHeight="40.0" prefWidth="320.0" showTickLabels="true" showTickMarks="true" value="0.025" />
+    <Label layoutX="116.0" layoutY="269.0" prefHeight="17.0" prefWidth="152.0" text="Generation number:" />
+    <Label layoutX="120.0" layoutY="359.0" prefHeight="17.0" prefWidth="130.0" text="Crossover rate:" />
+    <Label layoutX="499.0" layoutY="359.0" prefHeight="17.0" prefWidth="113.0" text="Mutation rate:" />
+    <Label fx:id="populationLabel" layoutX="226.0" layoutY="180.0" prefHeight="17.0" prefWidth="44.0" text="5" />
+    <Label fx:id="generationLabel" layoutX="255.0" layoutY="269.0" prefHeight="17.0" prefWidth="44.0" text="10" />
+    <Label fx:id="crossoverLabel" layoutX="227.0" layoutY="359.0" prefHeight="17.0" prefWidth="44.0" text="0.5" />
+    <Label fx:id="mutationLabel" layoutX="602.0" layoutY="359.0" prefHeight="17.0" prefWidth="44.0" text="0.025" />
+    <Label layoutX="337.0" layoutY="78.0" text="Function" />
+   <Button fx:id="openResultsButton" disable="true" layoutX="499.0" layoutY="672.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="180.0" style="-fx-background-radius: 100;" text="OPEN RESULTS" />
+   <TextArea fx:id="resultsArea" disable="true" editable="false" layoutX="113.0" layoutY="486.0" prefHeight="100.0" prefWidth="700.0" />
+</Pane>
