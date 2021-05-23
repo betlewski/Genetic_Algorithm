@@ -8,10 +8,10 @@ import lombok.Data;
 @Data
 public class Population {
 
-    private List<Chromosome> chromosomes;
+    private List<ChromosomePair> chromosomePairs;
 
     public Population(int size, boolean createNew) {
-        chromosomes = new ArrayList<>();
+        chromosomePairs = new ArrayList<>();
         if (createNew) {
             createNewPopulation(size);
         }
@@ -19,20 +19,22 @@ public class Population {
 
     private void createNewPopulation(int size) {
         for (int i = 0; i < size; i++) {
-            Chromosome newChromosome = new Chromosome();
-            chromosomes.add(i, newChromosome);
+            Chromosome chromosomeX = new Chromosome();
+            Chromosome chromosomeY = new Chromosome();
+            ChromosomePair chromosomePair = new ChromosomePair(chromosomeX, chromosomeY);
+            chromosomePairs.add(i, chromosomePair);
         }
     }
 
-    protected Chromosome getChromosome(int index) {
-        return chromosomes.get(index);
+    protected ChromosomePair getChromosomePair(int index) {
+        return chromosomePairs.get(index);
     }
 
-    protected Chromosome getBest() {
-        Chromosome minimum = chromosomes.get(0);
-        for (int i = 1; i < chromosomes.size(); i++) {
-            if (getChromosome(i).getFunctionValue() < minimum.getFunctionValue()) {
-                minimum = getChromosome(i);
+    protected ChromosomePair getBest() {
+        ChromosomePair minimum = chromosomePairs.get(0);
+        for (int i = 1; i < chromosomePairs.size(); i++) {
+            if (getChromosomePair(i).getFunctionValue() < minimum.getFunctionValue()) {
+                minimum = getChromosomePair(i);
             }
         }
         return minimum;

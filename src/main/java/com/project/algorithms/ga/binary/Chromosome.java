@@ -8,9 +8,6 @@ public class Chromosome {
     public static final int CHROMOSOME_LENGTH = 10;
     private byte[] genes = new byte[CHROMOSOME_LENGTH];
 
-    private double functionValue = 0;
-    private boolean actualFunctionValue = false;
-
     public Chromosome() {
         for (int i = 0; i < CHROMOSOME_LENGTH; i++) {
             byte gene = (byte) Math.round(Math.random());
@@ -24,15 +21,6 @@ public class Chromosome {
 
     protected void setSingleGene(int index, byte value) {
         genes[index] = value;
-        actualFunctionValue = false;
-    }
-
-    public double getFunctionValue() {
-        if (!actualFunctionValue) {
-            functionValue = SimpleGeneticAlgorithm.getFunctionValue(this);
-            actualFunctionValue = true;
-        }
-        return functionValue;
     }
 
     /**

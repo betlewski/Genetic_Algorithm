@@ -26,7 +26,8 @@ public class SimpleGeneticAlgorithm {
         while (generationCount <= generationNumber) {
             System.out.println("Generation: " + generationCount
                     + " Best found value: " + myPop.getBest().getFunctionValue()
-                    + " (x = " + myPop.getBest().getDecimalValue() + ")");
+                    + " (x = " + myPop.getBest().getChromosomeX().getDecimalValue()
+                    + " | y = " + myPop.getBest().getChromosomeY().getDecimalValue() + ")");
             myPop = evolvePopulation(myPop);
             showPopulation(myPop);
             generationCount++;
@@ -34,13 +35,17 @@ public class SimpleGeneticAlgorithm {
         System.out.println("--------------------FINISH--------------------");
         System.out.println("Generation: " + generationCount
                 + " Best found value: " + myPop.getBest().getFunctionValue()
-                + " (x = " + myPop.getBest().getDecimalValue() + ")");
+                + " (x = " + myPop.getBest().getChromosomeX().getDecimalValue()
+                + " | y = " + myPop.getBest().getChromosomeY().getDecimalValue() + ")");
     }
 
     private void showPopulation(Population population) {
         for (int i = 0; i < populationSize; i++) {
-            System.out.println("Chromosome " + (i + 1) + ": " + population.getChromosome(i).toString()
-                    + " (" + population.getChromosome(i).getDecimalValue() + ")");
+            System.out.println("Chromosome " + (i + 1) + ": "
+                    + " x = " + population.getChromosomePair(i).getChromosomeX().toString()
+                    + " (" + population.getChromosomePair(i).getChromosomeX().getDecimalValue() + ")"
+                    + " | y = " + population.getChromosomePair(i).getChromosomeY().toString()
+                    + " (" + population.getChromosomePair(i).getChromosomeY().getDecimalValue() + ")");
         }
     }
 
@@ -54,16 +59,16 @@ public class SimpleGeneticAlgorithm {
     private Population rouletteWheelSelection(Population population) {
         Population newPopulation = new Population(populationSize, false);
         double totalSum = 0;
-        for (Chromosome chromosome : population.getChromosomes()) {
-            totalSum += getFunctionValue(chromosome);
+        for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
+            totalSum += getFunctionValue(chromosomePair);
         }
         for (int j = 0; j < populationSize; j++) {
             double random = Math.random() * totalSum;
             double partialSum = 0;
-            for (Chromosome chromosome : population.getChromosomes()) {
-                partialSum += getFunctionValue(chromosome);
+            for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
+                partialSum += getFunctionValue(chromosomePair);
                 if (partialSum >= random) {
-                    newPopulation.getChromosomes().add(chromosome);
+                    newPopulation.getChromosomePairs().add(chromosomePair);
                     break;
                 }
             }
@@ -71,55 +76,65 @@ public class SimpleGeneticAlgorithm {
         return newPopulation;
     }
 
-    private double getFunctionValue(Chromosome chromosome) {
-        return FunctionUtils.getValueInPoint(functionType, chromosome.getDecimalValue());
-    }
-
     private Population crossover(Population population) {
         Population newPopulation = new Population(populationSize, false);
-        if (population.getChromosomes().size() % 2 == 1) {
-            int randomIndex = new Random().nextInt(population.getChromosomes().size());
-            Chromosome chromosome = population.getChromosome(randomIndex);
-            population.getChromosomes().remove(chromosome);
-            newPopulation.getChromosomes().add(chromosome);
+        if (population.getChromosomePairs().size() % 2 == 1) {
+            int randomIndex = new Random().nextInt(population.getChromosomePairs().size());
+            ChromosomePair chromosomePair = population.getChromosomePair(randomIndex);
+            population.getChromosomePairs().remove(chromosomePair);
+            newPopulation.getChromosomePairs().add(chromosomePair);
         }
-        while (!population.getChromosomes().isEmpty()) {
-            int randomIndex1 = new Random().nextInt(population.getChromosomes().size());
-            Chromosome chromosome1 = population.getChromosome(randomIndex1);
-            population.getChromosomes().remove(chromosome1);
+        while (!population.getChromosomePairs().isEmpty()) {
+            int randomIndex1 = new Random().nextInt(population.getChromosomePairs().size());
+            ChromosomePair chromosomePair1 = population.getChromosomePair(randomIndex1);
+            population.getChromosomePairs().remove(chromosomePair1);
 
-            int randomIndex2 = new Random().nextInt(population.getChromosomes().size());
-            Chromosome chromosome2 = population.getChromosome(randomIndex2);
-            population.getChromosomes().remove(chromosome2);
+            int randomIndex2 = new Random().nextInt(population.getChromosomePairs().size());
+            ChromosomePair chromosomePair2 = population.getChromosomePair(randomIndex2);
+            population.getChromosomePairs().remove(chromosomePair2);
 
-            pairCrossover(chromosome1, chromosome2);
-            newPopulation.getChromosomes().add(chromosome1);
-            newPopulation.getChromosomes().add(chromosome2);
+            pairCrossover(chromosomePair1, chromosomePair2);
+            newPopulation.getChromosomePairs().add(chromosomePair1);
+            newPopulation.getChromosomePairs().add(chromosomePair2);
         }
         return newPopulation;
     }
 
-    private void pairCrossover(Chromosome chromosome1, Chromosome chromosome2) {
+    private void pairCrossover(ChromosomePair chromosomePair1, ChromosomePair chromosomePair2) {
         if (Math.random() <= crossoverRate) {
             int locus = new Random().nextInt(Chromosome.CHROMOSOME_LENGTH - 2) + 1;
             for (int i = locus; i < Chromosome.CHROMOSOME_LENGTH; i++) {
-                byte swappedGene = chromosome1.getSingleGene(i);
-                chromosome1.setSingleGene(i, chromosome2.getSingleGene(i));
-                chromosome2.setSingleGene(i, swappedGene);
+                byte swappedGene = chromosomePair1.getChromosomeX().getSingleGene(i);
+                chromosomePair1.getChromosomeX().setSingleGene(i, chromosomePair2.getChromosomeX().getSingleGene(i));
+                chromosomePair2.getChromosomeX().setSingleGene(i, swappedGene);
+
+                swappedGene = chromosomePair1.getChromosomeY().getSingleGene(i);
+                chromosomePair1.getChromosomeY().setSingleGene(i, chromosomePair2.getChromosomeY().getSingleGene(i));
+                chromosomePair2.getChromosomeY().setSingleGene(i, swappedGene);
             }
         }
     }
 
     private void mutate(Population population) {
-        for (Chromosome chromosome : population.getChromosomes()) {
+        for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
             for (int i = 0; i < Chromosome.CHROMOSOME_LENGTH; i++) {
                 if (Math.random() <= mutationRate) {
-                    byte actualGene = chromosome.getSingleGene(i);
+                    byte actualGene = chromosomePair.getChromosomeX().getSingleGene(i);
                     byte newGene = actualGene == 0 ? (byte) 1 : 0;
-                    chromosome.setSingleGene(i, newGene);
+                    chromosomePair.getChromosomeX().setSingleGene(i, newGene);
+
+                    actualGene = chromosomePair.getChromosomeY().getSingleGene(i);
+                    newGene = actualGene == 0 ? (byte) 1 : 0;
+                    chromosomePair.getChromosomeY().setSingleGene(i, newGene);
                 }
             }
         }
+    }
+
+    protected static double getFunctionValue(ChromosomePair chromosomePair) {
+        double valueX = chromosomePair.getChromosomeX().getDecimalValue();
+        double valueY = chromosomePair.getChromosomeY().getDecimalValue();
+        return FunctionUtils.getValueInPoint(functionType, valueX, valueY);
     }
 
 }
