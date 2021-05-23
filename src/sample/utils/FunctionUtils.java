@@ -1,4 +1,4 @@
-package sample.ga;
+package sample.utils;
 
 /**
  * Function utils for calculating value in point.

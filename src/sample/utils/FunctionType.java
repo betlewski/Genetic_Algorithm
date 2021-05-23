@@ -1,4 +1,4 @@
-package sample.ga;
+package sample.utils;
 
 /**
  * Function types to chosen for optimization.

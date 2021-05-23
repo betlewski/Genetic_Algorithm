@@ -1,6 +1,8 @@
 package sample.ga;
 
 import lombok.Data;
+import sample.utils.FunctionType;
+import sample.utils.FunctionUtils;
 
 import java.util.Random;
 
@@ -47,10 +49,13 @@ public class GeneticAlgorithm {
             showPopulation(myPop);
             generationCount++;
         }
-        return "Generation: " + generationCount
-                + " Best found value: " + myPop.getBest().getFunctionValue()
-                + " (x = " + myPop.getBest().getChromosomeX().getDecimalValue()
-                + " | y = " + myPop.getBest().getChromosomeY().getDecimalValue() + ")";
+        return getResults(myPop);
+    }
+
+    private String getResults(Population population) {
+        return "Best found value: " + population.getBest().getFunctionValue() + "\n"
+                + " X = " + population.getBest().getChromosomeX() + " (" + population.getBest().getChromosomeX().getDecimalValue() + ")\n"
+                + " Y = " + population.getBest().getChromosomeY() + " (" + population.getBest().getChromosomeY().getDecimalValue() + ")";
     }
 
     private void showPopulation(Population population) {
