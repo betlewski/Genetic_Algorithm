@@ -1,4 +1,4 @@
-package com.project.algorithms.ga.binary;
+package sample.ga;
 
 /**
  * Function types to chosen for optimization.

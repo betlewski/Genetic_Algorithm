@@ -1,4 +1,4 @@
-package com.project.algorithms.ga.binary;
+package sample.ga;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ public class ChromosomePair {
     private Chromosome chromosomeY;
 
     public double getFunctionValue() {
-        return SimpleGeneticAlgorithm.getFunctionValue(this);
+        return GeneticAlgorithm.getFunctionValue(this);
     }
 
 }

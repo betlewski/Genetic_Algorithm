@@ -1,4 +1,4 @@
-package com.project.algorithms.ga.binary;
+package sample.ga;
 
 /**
  * Function utils for calculating value in point.

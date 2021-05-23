@@ -1,11 +1,11 @@
-package com.project.algorithms.ga.binary;
+package sample.ga;
 
 import lombok.Data;
 
 import java.util.Random;
 
 @Data
-public class SimpleGeneticAlgorithm {
+public class GeneticAlgorithm {
 
     private static FunctionType functionType;
     private static int populationSize;
