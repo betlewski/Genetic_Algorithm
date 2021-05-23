@@ -30,7 +30,7 @@ public class Population {
         return chromosomePairs.get(index);
     }
 
-    protected ChromosomePair getBest() {
+    public ChromosomePair getBest() {
         ChromosomePair minimum = chromosomePairs.get(0);
         for (int i = 1; i < chromosomePairs.size(); i++) {
             if (getChromosomePair(i).getFunctionValue() < minimum.getFunctionValue()) {
