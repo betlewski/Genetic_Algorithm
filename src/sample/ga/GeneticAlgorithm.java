@@ -13,12 +13,27 @@ public class GeneticAlgorithm {
     private static double crossoverRate;
     private static double mutationRate;
 
-    public void runAlgorithm(FunctionType function, int populationValue, int generations, double crossRate, double mutateRate) {
+    public static final double DEFAULT_CROSSOVER_RATE = 0.5;
+    public static final double DEFAULT_MUTATION_RATE = 0.05;
+
+    public GeneticAlgorithm(FunctionType function, int populationValue, int generationValue,
+                            double crossRateValue, double mutationRateValue) {
         functionType = function;
         populationSize = populationValue;
-        generationNumber = generations;
-        crossoverRate = crossRate;
-        mutationRate = mutateRate;
+        generationNumber = generationValue;
+        crossoverRate = crossRateValue;
+        mutationRate = mutationRateValue;
+    }
+
+    public GeneticAlgorithm(FunctionType function, int populationValue, int generationValue) {
+        functionType = function;
+        populationSize = populationValue;
+        generationNumber = generationValue;
+        crossoverRate = DEFAULT_CROSSOVER_RATE;
+        mutationRate = DEFAULT_MUTATION_RATE;
+    }
+
+    public String runAlgorithm() {
         Population myPop = new Population(populationSize, true);
         showPopulation(myPop);
         System.out.println("---------------------START---------------------");
@@ -32,11 +47,10 @@ public class GeneticAlgorithm {
             showPopulation(myPop);
             generationCount++;
         }
-        System.out.println("--------------------FINISH--------------------");
-        System.out.println("Generation: " + generationCount
+        return "Generation: " + generationCount
                 + " Best found value: " + myPop.getBest().getFunctionValue()
                 + " (x = " + myPop.getBest().getChromosomeX().getDecimalValue()
-                + " | y = " + myPop.getBest().getChromosomeY().getDecimalValue() + ")");
+                + " | y = " + myPop.getBest().getChromosomeY().getDecimalValue() + ")";
     }
 
     private void showPopulation(Population population) {
