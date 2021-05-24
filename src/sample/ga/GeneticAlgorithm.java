@@ -3,12 +3,14 @@ package sample.ga;
 import lombok.Data;
 import sample.utils.FunctionType;
 import sample.utils.FunctionUtils;
+import sample.utils.Logger;
 
 import java.util.Random;
 
 @Data
 public class GeneticAlgorithm {
 
+    private Logger logger;
     private static FunctionType functionType;
     private static int populationSize;
     private static int generationNumber;
@@ -28,44 +30,27 @@ public class GeneticAlgorithm {
     }
 
     public GeneticAlgorithm(FunctionType function, int populationValue, int generationValue) {
-        functionType = function;
-        populationSize = populationValue;
-        generationNumber = generationValue;
-        crossoverRate = DEFAULT_CROSSOVER_RATE;
-        mutationRate = DEFAULT_MUTATION_RATE;
+        this(function, populationValue, generationValue, DEFAULT_CROSSOVER_RATE, DEFAULT_MUTATION_RATE);
+    }
+
+    public Logger getLogger() {
+        return logger;
     }
 
     public String runAlgorithm() {
-        Population myPop = new Population(populationSize, true);
-        showPopulation(myPop);
-        System.out.println("---------------------START---------------------");
+        logger = new Logger();
+        logger.initialize(functionType, populationSize, generationNumber, crossoverRate, mutationRate);
+        Population myPopulation = new Population(populationSize, true);
+        logger.startAlgorithm(myPopulation);
         int generationCount = 1;
         while (generationCount <= generationNumber) {
-            System.out.println("Generation: " + generationCount
-                    + " Best found value: " + myPop.getBest().getFunctionValue()
-                    + " (x = " + myPop.getBest().getChromosomeX().getDecimalValue()
-                    + " | y = " + myPop.getBest().getChromosomeY().getDecimalValue() + ")");
-            myPop = evolvePopulation(myPop);
-            showPopulation(myPop);
+            logger.startGeneration(generationCount);
+            myPopulation = evolvePopulation(myPopulation);
+            logger.finishGeneration(myPopulation);
             generationCount++;
         }
-        return getResults(myPop);
-    }
-
-    private String getResults(Population population) {
-        return "Best found value: " + population.getBest().getFunctionValue() + "\n"
-                + " X = " + population.getBest().getChromosomeX() + " (" + population.getBest().getChromosomeX().getDecimalValue() + ")\n"
-                + " Y = " + population.getBest().getChromosomeY() + " (" + population.getBest().getChromosomeY().getDecimalValue() + ")";
-    }
-
-    private void showPopulation(Population population) {
-        for (int i = 0; i < populationSize; i++) {
-            System.out.println("Chromosome " + (i + 1) + ": "
-                    + " x = " + population.getChromosomePair(i).getChromosomeX().toString()
-                    + " (" + population.getChromosomePair(i).getChromosomeX().getDecimalValue() + ")"
-                    + " | y = " + population.getChromosomePair(i).getChromosomeY().toString()
-                    + " (" + population.getChromosomePair(i).getChromosomeY().getDecimalValue() + ")");
-        }
+        logger.writeResults(myPopulation);
+        return logger.getResults(myPopulation);
     }
 
     private Population evolvePopulation(Population population) {
@@ -81,6 +66,7 @@ public class GeneticAlgorithm {
         for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
             totalSum += getFunctionValue(chromosomePair);
         }
+        logger.startSelection(totalSum);
         for (int j = 0; j < populationSize; j++) {
             double random = Math.random() * totalSum;
             double partialSum = 0;
@@ -88,6 +74,8 @@ public class GeneticAlgorithm {
                 partialSum += getFunctionValue(chromosomePair);
                 if (partialSum >= random) {
                     newPopulation.getChromosomePairs().add(chromosomePair);
+                    logger.runSelection(j + 1, random,
+                            population.getChromosomePairs().indexOf(chromosomePair) + 1);
                     break;
                 }
             }
@@ -96,6 +84,7 @@ public class GeneticAlgorithm {
     }
 
     private Population crossover(Population population) {
+        logger.initCrossing(population);
         Population newPopulation = new Population(populationSize, false);
         if (population.getChromosomePairs().size() % 2 == 1) {
             int randomIndex = new Random().nextInt(population.getChromosomePairs().size());
@@ -120,7 +109,9 @@ public class GeneticAlgorithm {
     }
 
     private void pairCrossover(ChromosomePair chromosomePair1, ChromosomePair chromosomePair2) {
-        if (Math.random() <= crossoverRate) {
+        double crossRandom = Math.random();
+        logger.startCrossing(chromosomePair1, chromosomePair2, crossRandom, crossRandom <= crossoverRate);
+        if (crossRandom <= crossoverRate) {
             int locus = new Random().nextInt(Chromosome.CHROMOSOME_LENGTH - 2) + 1;
             for (int i = locus; i < Chromosome.CHROMOSOME_LENGTH; i++) {
                 byte swappedGene = chromosomePair1.getChromosomeX().getSingleGene(i);
@@ -131,13 +122,18 @@ public class GeneticAlgorithm {
                 chromosomePair1.getChromosomeY().setSingleGene(i, chromosomePair2.getChromosomeY().getSingleGene(i));
                 chromosomePair2.getChromosomeY().setSingleGene(i, swappedGene);
             }
+            logger.runCrossing(chromosomePair1, chromosomePair2, locus);
         }
     }
 
     private void mutate(Population population) {
+        logger.initMutation(population);
         for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
+            logger.startMutation(chromosomePair);
             for (int i = 0; i < Chromosome.CHROMOSOME_LENGTH; i++) {
-                if (Math.random() <= mutationRate) {
+                double mutateRandom = Math.random();
+                logger.runMutation(i + 1, mutateRandom, mutateRandom <= mutationRate);
+                if (mutateRandom <= mutationRate) {
                     byte actualGene = chromosomePair.getChromosomeX().getSingleGene(i);
                     byte newGene = actualGene == 0 ? (byte) 1 : 0;
                     chromosomePair.getChromosomeX().setSingleGene(i, newGene);
@@ -147,6 +143,7 @@ public class GeneticAlgorithm {
                     chromosomePair.getChromosomeY().setSingleGene(i, newGene);
                 }
             }
+            logger.finishMutation(chromosomePair);
         }
     }
 
