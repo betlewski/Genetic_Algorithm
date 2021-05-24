@@ -16,9 +16,9 @@ public class ChromosomePair {
 
     public ChromosomePair clone() {
         Chromosome chromosomeX = new Chromosome();
-        chromosomeX.setGenes(this.chromosomeX.getGenes());
+        chromosomeX.setGenes(this.chromosomeX.getGenes().clone());
         Chromosome chromosomeY = new Chromosome();
-        chromosomeY.setGenes(this.chromosomeY.getGenes());
+        chromosomeY.setGenes(this.chromosomeY.getGenes().clone());
         return new ChromosomePair(chromosomeX, chromosomeY);
     }
 
