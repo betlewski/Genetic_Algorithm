@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import sample.utils.FunctionType;
 import sample.ga.GeneticAlgorithm;
+import sample.utils.Logger;
 
 public class Controller {
 
@@ -48,14 +49,19 @@ public class Controller {
     }
 
     private void setButtonListeners() {
-        startButton.setOnAction(event -> {
+        startButton.setOnAction(event1 -> {
             String beginText = functionType.getDescription() +
                     "\n---------------------------------------------------------\n";
             resultsArea.setText(beginText);
             ga = new GeneticAlgorithm(functionType, populationSize, generationNumber, crossoverRate, mutationRate);
             String results = ga.runAlgorithm();
             resultsArea.appendText(results);
+
             openResultsButton.setDisable(false);
+            openResultsButton.setOnAction(event2 -> {
+                Logger logger = ga.getLogger();
+                logger.getFileHandler().openFile();
+            });
         });
     }
 
