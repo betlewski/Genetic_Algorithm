@@ -45,18 +45,31 @@ public class Logger {
         }
     }
 
+    private void saveGenerationWithReversed(Population population) {
+        int counter = 1;
+        for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
+            double reversedValue = Math.round((1.0 / chromosomePair.getFunctionValue()) * 1000.0) / 1000.0;
+            String generationText = "Chromosome " + counter + ": (value = " + chromosomePair.getFunctionValue()
+                    + ", reversed = " + reversedValue + ")\n"
+                    + " X = " + chromosomePair.getChromosomeX() + "\n"
+                    + " Y = " + chromosomePair.getChromosomeY();
+            fileHandler.log(generationText);
+            counter++;
+        }
+    }
+
     public void startAlgorithm(Population population) {
         startGeneration(0);
-        saveGeneration(population);
+        saveGenerationWithReversed(population);
     }
 
     public void startGeneration(int generationCount) {
         fileHandler.log("\n\n#################### GENERATION " + generationCount + " ####################\n");
     }
 
-    public void startSelection(double totalSum) {
+    public void startSelection(double totalReversedSum) {
         fileHandler.log("--------------------SELECTION--------------------\n");
-        fileHandler.log("Total sum: " + totalSum + "\n");
+        fileHandler.log("Total reversed sum: " + totalReversedSum + "\n");
     }
 
     public void runSelection(int order, double randomNumber, int foundIndex) {
@@ -115,7 +128,7 @@ public class Logger {
 
     public void finishGeneration(Population population) {
         fileHandler.log("\n~~~~~~~~~~ Population after mutation ~~~~~~~~~~\n");
-        saveGeneration(population);
+        saveGenerationWithReversed(population);
     }
 
     public void writeResults(Population population) {

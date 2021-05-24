@@ -62,20 +62,20 @@ public class GeneticAlgorithm {
 
     private Population rouletteWheelSelection(Population population) {
         Population newPopulation = new Population(populationSize, false);
-        double totalSum = 0;
+        double totalReversedSum = 0;
         for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
-            totalSum += getFunctionValue(chromosomePair);
+            totalReversedSum += (1 / getFunctionValue(chromosomePair));
         }
-        logger.startSelection(totalSum);
+        logger.startSelection(totalReversedSum);
         for (int j = 0; j < populationSize; j++) {
-            double random = Math.random() * totalSum;
-            double partialSum = 0;
-            for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
-                partialSum += getFunctionValue(chromosomePair);
-                if (partialSum >= random) {
+            double random = Math.random() * totalReversedSum;
+            double partialReversedSum = 0;
+            for (int i = 0; i < populationSize; i++) {
+                ChromosomePair chromosomePair = population.getChromosomePair(i);
+                partialReversedSum += (1 / getFunctionValue(chromosomePair));
+                if (partialReversedSum >= random) {
                     newPopulation.getChromosomePairs().add(chromosomePair);
-                    logger.runSelection(j + 1, random,
-                            population.getChromosomePairs().indexOf(chromosomePair) + 1);
+                    logger.runSelection(j + 1, random, i + 1);
                     break;
                 }
             }
