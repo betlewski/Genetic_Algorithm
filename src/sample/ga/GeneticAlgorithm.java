@@ -74,7 +74,7 @@ public class GeneticAlgorithm {
                 ChromosomePair chromosomePair = population.getChromosomePair(i);
                 partialReversedSum += (1 / getFunctionValue(chromosomePair));
                 if (partialReversedSum >= random) {
-                    newPopulation.getChromosomePairs().add(chromosomePair);
+                    newPopulation.getChromosomePairs().add(chromosomePair.clone());
                     logger.runSelection(j + 1, random, i + 1);
                     break;
                 }
@@ -94,12 +94,10 @@ public class GeneticAlgorithm {
         }
         while (!population.getChromosomePairs().isEmpty()) {
             int randomIndex1 = new Random().nextInt(population.getChromosomePairs().size());
-            ChromosomePair chromosomePair1 = population.getChromosomePair(randomIndex1);
-            population.getChromosomePairs().remove(chromosomePair1);
+            ChromosomePair chromosomePair1 = population.getChromosomePairs().remove(randomIndex1);
 
             int randomIndex2 = new Random().nextInt(population.getChromosomePairs().size());
-            ChromosomePair chromosomePair2 = population.getChromosomePair(randomIndex2);
-            population.getChromosomePairs().remove(chromosomePair2);
+            ChromosomePair chromosomePair2 = population.getChromosomePairs().remove(randomIndex2);
 
             pairCrossover(chromosomePair1, chromosomePair2);
             newPopulation.getChromosomePairs().add(chromosomePair1);
