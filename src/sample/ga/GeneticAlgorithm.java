@@ -5,7 +5,10 @@ import sample.utils.FunctionType;
 import sample.utils.FunctionUtils;
 import sample.utils.Logger;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Data
 public class GeneticAlgorithm {
@@ -54,7 +57,7 @@ public class GeneticAlgorithm {
     }
 
     private Population evolvePopulation(Population population) {
-        Population population1 = rouletteWheelSelection(population);
+        Population population1 = rankSelection(population);
         Population population2 = crossover(population1);
         mutate(population2);
         return population2;
@@ -74,6 +77,31 @@ public class GeneticAlgorithm {
                 ChromosomePair chromosomePair = population.getChromosomePair(i);
                 partialReversedSum += (1 / getFunctionValue(chromosomePair));
                 if (partialReversedSum >= random) {
+                    newPopulation.getChromosomePairs().add(chromosomePair.clone());
+                    logger.runSelection(j + 1, random, i + 1);
+                    break;
+                }
+            }
+        }
+        return newPopulation;
+    }
+
+    private Population rankSelection(Population population) {
+        Population newPopulation = new Population(populationSize, false);
+        population.getChromosomePairs().sort(Comparator.comparingDouble(ChromosomePair::getFunctionValue));
+        Collections.reverse(population.getChromosomePairs());
+        double rankSum = 0;
+        for (int i = 0; i < populationSize; i++) {
+            rankSum += (double) (i + 1) / populationSize;
+        }
+        logger.startSelection(rankSum);
+        for (int j = 0; j < populationSize; j++) {
+            double random = Math.random() * rankSum;
+            double partialRankSum = 0;
+            for (int i = 0; i < populationSize; i++) {
+                ChromosomePair chromosomePair = population.getChromosomePair(i);
+                partialRankSum += (double) (i + 1) / populationSize;
+                if (partialRankSum >= random) {
                     newPopulation.getChromosomePairs().add(chromosomePair.clone());
                     logger.runSelection(j + 1, random, i + 1);
                     break;
