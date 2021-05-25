@@ -53,15 +53,17 @@ public class Controller {
             String beginText = functionType.getDescription() +
                     "\n---------------------------------------------------------\n";
             resultsArea.setText(beginText);
+            openResultsButton.setDisable(true);
             ga = new GeneticAlgorithm(functionType, populationSize, generationNumber, crossoverRate, mutationRate);
-            String results = ga.runAlgorithm();
-            resultsArea.appendText(results);
-
-            openResultsButton.setDisable(false);
-            openResultsButton.setOnAction(event2 -> {
-                Logger logger = ga.getLogger();
-                logger.getFileHandler().openFile();
-            });
+            new Thread(() -> {
+                String results = ga.runAlgorithm();
+                resultsArea.appendText(results);
+                openResultsButton.setDisable(false);
+                openResultsButton.setOnAction(event2 -> {
+                    Logger logger = ga.getLogger();
+                    logger.getFileHandler().openFile();
+                });
+            }).start();
         });
     }
 
