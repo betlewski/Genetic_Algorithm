@@ -8,7 +8,6 @@ import sample.utils.Logger;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Data
 public class GeneticAlgorithm {
@@ -57,7 +56,7 @@ public class GeneticAlgorithm {
     }
 
     private Population evolvePopulation(Population population) {
-        Population population1 = rankSelection(population);
+        Population population1 = rouletteWheelSelection(population);
         Population population2 = crossover(population1);
         mutate(population2);
         return population2;
@@ -69,7 +68,7 @@ public class GeneticAlgorithm {
         for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
             totalReversedSum += (1 / getFunctionValue(chromosomePair));
         }
-        logger.startSelection(totalReversedSum);
+        logger.startSelectionWithSum(totalReversedSum);
         for (int j = 0; j < populationSize; j++) {
             double random = Math.random() * totalReversedSum;
             double partialReversedSum = 0;
@@ -92,20 +91,42 @@ public class GeneticAlgorithm {
         Collections.reverse(population.getChromosomePairs());
         double rankSum = 0;
         for (int i = 0; i < populationSize; i++) {
-            rankSum += (double) (i + 1) / populationSize;
+            rankSum += (i + 1);
         }
-        logger.startSelection(rankSum);
+        logger.startSelectionWithSum(rankSum);
         for (int j = 0; j < populationSize; j++) {
             double random = Math.random() * rankSum;
             double partialRankSum = 0;
             for (int i = 0; i < populationSize; i++) {
                 ChromosomePair chromosomePair = population.getChromosomePair(i);
-                partialRankSum += (double) (i + 1) / populationSize;
+                partialRankSum += (i + 1);
                 if (partialRankSum >= random) {
                     newPopulation.getChromosomePairs().add(chromosomePair.clone());
                     logger.runSelection(j + 1, random, i + 1);
                     break;
                 }
+            }
+        }
+        return newPopulation;
+    }
+
+    private Population tournamentSelection(Population population) {
+        logger.startSelection();
+        Population newPopulation = new Population(populationSize, false);
+        for (int j = 0; j < populationSize; j++) {
+            int randomIndex1 = new Random().nextInt(population.getChromosomePairs().size());
+            int randomIndex2 = new Random().nextInt(population.getChromosomePairs().size());
+            while (randomIndex1 == randomIndex2) {
+                randomIndex2 = new Random().nextInt(population.getChromosomePairs().size());
+            }
+            ChromosomePair chromosomePair1 = population.getChromosomePairs().get(randomIndex1);
+            ChromosomePair chromosomePair2 = population.getChromosomePairs().get(randomIndex2);
+            if (chromosomePair1.getFunctionValue() < chromosomePair2.getFunctionValue()) {
+                newPopulation.getChromosomePairs().add(chromosomePair1);
+                logger.runTournamentSelection(j + 1, chromosomePair1, chromosomePair2, chromosomePair1);
+            } else {
+                newPopulation.getChromosomePairs().add(chromosomePair2);
+                logger.runTournamentSelection(j + 1, chromosomePair1, chromosomePair2, chromosomePair2);
             }
         }
         return newPopulation;

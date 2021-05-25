@@ -45,35 +45,35 @@ public class Logger {
         }
     }
 
-    private void saveGenerationWithReversed(Population population) {
-        int counter = 1;
-        for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
-            double reversedValue = Math.round((1.0 / chromosomePair.getFunctionValue()) * 1000.0) / 1000.0;
-            String generationText = "Chromosome " + counter + ": (value = " + chromosomePair.getFunctionValue()
-                    + ", reversed = " + reversedValue + ")\n"
-                    + " X = " + chromosomePair.getChromosomeX() + "\n"
-                    + " Y = " + chromosomePair.getChromosomeY();
-            fileHandler.log(generationText);
-            counter++;
-        }
-    }
-
     public void startAlgorithm(Population population) {
         startGeneration(0);
-        saveGenerationWithReversed(population);
+        saveGeneration(population);
     }
 
     public void startGeneration(int generationCount) {
         fileHandler.log("\n\n#################### GENERATION " + generationCount + " ####################\n");
     }
 
-    public void startSelection(double totalReversedSum) {
+    public void startSelectionWithSum(double totalSum) {
+        startSelection();
+        fileHandler.log("Total sum: " + totalSum + "\n");
+    }
+
+    public void startSelection() {
         fileHandler.log("--------------------SELECTION--------------------\n");
-        fileHandler.log("Total reversed sum: " + totalReversedSum + "\n");
     }
 
     public void runSelection(int order, double randomNumber, int foundIndex) {
         fileHandler.log("Random " + order + ": " + randomNumber + " -> Chromosome " + foundIndex);
+    }
+
+    public void runTournamentSelection(int order, ChromosomePair chromosomePair1,
+                                       ChromosomePair chromosomePair2, ChromosomePair winnerChromosome) {
+        fileHandler.log("\n********** Round " + order + " **********\n");
+        writeChromosome(chromosomePair1);
+        writeChromosome(chromosomePair2);
+        fileHandler.log("\nWinner:\n");
+        writeChromosome(winnerChromosome);
     }
 
     public void initCrossing(Population population) {
@@ -128,7 +128,7 @@ public class Logger {
 
     public void finishGeneration(Population population) {
         fileHandler.log("\n~~~~~~~~~~ Population after mutation ~~~~~~~~~~\n");
-        saveGenerationWithReversed(population);
+        saveGeneration(population);
     }
 
     public void writeResults(Population population) {
