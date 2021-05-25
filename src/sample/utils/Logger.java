@@ -19,7 +19,7 @@ public class Logger {
     public void initialize(FunctionType function, SelectionType selectionType, int populationValue,
                            int generationValue, double crossRateValue, double mutationRateValue) {
         fileHandler.log(function.description);
-        String initialParam = "\n--------------------INITIAL PARAMETERS--------------------\n" +
+        String initialParam = "\n------------------- INITIAL PARAMETERS -------------------\n" +
                 "Population size: " + populationValue + "\n" +
                 "Generation number: " + generationValue + "\n" +
                 "Selection type: " + selectionType + "\n" +
@@ -47,6 +47,18 @@ public class Logger {
         }
     }
 
+    private void saveGenerationWithReversed(Population population) {
+        int counter = 1;
+        for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
+            String generationText = "Chromosome " + counter
+                    + ": (reversed value = " + (1 / chromosomePair.getFunctionValue()) + ")\n"
+                    + " X = " + chromosomePair.getChromosomeX() + "\n"
+                    + " Y = " + chromosomePair.getChromosomeY();
+            fileHandler.log(generationText);
+            counter++;
+        }
+    }
+
     public void startAlgorithm(Population population) {
         startGeneration(0);
         saveGeneration(population);
@@ -57,16 +69,20 @@ public class Logger {
     }
 
     public void startSelection() {
-        fileHandler.log("--------------------SELECTION--------------------\n");
+        fileHandler.log("-------------------- SELECTION --------------------\n");
     }
 
-    public void startSelectionWithSum(double totalSum) {
+    public void startSelectionWithSumAndReversedPopulation(double totalSum, Population population) {
         startSelection();
-        fileHandler.log("Total sum: " + totalSum + "\n");
+        fileHandler.log("Total reversed sum: " + totalSum + "\n");
+        fileHandler.log("~~~~~~~~~~ Reversed values ~~~~~~~~~~\n");
+        saveGenerationWithReversed(population);
+        fileHandler.newLine();
     }
 
     public void startSelectionWithSumAndSortedPopulation(double totalSum, Population population) {
-        startSelectionWithSum(totalSum);
+        startSelection();
+        fileHandler.log("Total sum: " + totalSum + "\n");
         fileHandler.log("~~~~~~~~~~ Sorted population ~~~~~~~~~~\n");
         saveGeneration(population);
         fileHandler.newLine();
@@ -88,7 +104,7 @@ public class Logger {
     public void initCrossing(Population population) {
         fileHandler.log("\n\n~~~~~~~~~~ Population after selection ~~~~~~~~~~\n");
         saveGeneration(population);
-        fileHandler.log("\n--------------------CROSSOVER--------------------");
+        fileHandler.log("\n-------------------- CROSSOVER --------------------");
     }
 
     public void startCrossing(ChromosomePair chromosomePair1, ChromosomePair chromosomePair2,
@@ -113,7 +129,7 @@ public class Logger {
     public void initMutation(Population population) {
         fileHandler.log("\n\n~~~~~~~~~~ Population after crossing ~~~~~~~~~~\n");
         saveGeneration(population);
-        fileHandler.log("\n--------------------MUTATION--------------------");
+        fileHandler.log("\n-------------------- MUTATION --------------------");
     }
 
     public void startMutation(ChromosomePair chromosomePair) {

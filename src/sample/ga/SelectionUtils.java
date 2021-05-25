@@ -30,7 +30,7 @@ public class SelectionUtils {
         for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
             totalReversedSum += (1 / getFunctionValue(chromosomePair));
         }
-        logger.startSelectionWithSum(totalReversedSum);
+        logger.startSelectionWithSumAndReversedPopulation(totalReversedSum, population);
         for (int j = 0; j < populationSize; j++) {
             double random = Math.random() * totalReversedSum;
             double partialReversedSum = 0;
