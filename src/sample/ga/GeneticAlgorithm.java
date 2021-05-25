@@ -1,19 +1,18 @@
 package sample.ga;
 
 import lombok.Data;
-import sample.utils.FunctionType;
-import sample.utils.FunctionUtils;
-import sample.utils.Logger;
+import sample.utils.*;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Random;
+
+import static sample.utils.SelectionUtils.selection;
 
 @Data
 public class GeneticAlgorithm {
 
     private Logger logger;
     private static FunctionType functionType;
+    private static SelectionType selectionType;
     private static int populationSize;
     private static int generationNumber;
     private static double crossoverRate;
@@ -22,17 +21,18 @@ public class GeneticAlgorithm {
     public static final double DEFAULT_CROSSOVER_RATE = 0.5;
     public static final double DEFAULT_MUTATION_RATE = 0.05;
 
-    public GeneticAlgorithm(FunctionType function, int populationValue, int generationValue,
-                            double crossRateValue, double mutationRateValue) {
+    public GeneticAlgorithm(FunctionType function, SelectionType selection, int populationValue,
+                            int generationValue, double crossRateValue, double mutationRateValue) {
         functionType = function;
+        selectionType = selection;
         populationSize = populationValue;
         generationNumber = generationValue;
         crossoverRate = crossRateValue;
         mutationRate = mutationRateValue;
     }
 
-    public GeneticAlgorithm(FunctionType function, int populationValue, int generationValue) {
-        this(function, populationValue, generationValue, DEFAULT_CROSSOVER_RATE, DEFAULT_MUTATION_RATE);
+    public GeneticAlgorithm(FunctionType function, SelectionType selection, int populationValue, int generationValue) {
+        this(function, selection, populationValue, generationValue, DEFAULT_CROSSOVER_RATE, DEFAULT_MUTATION_RATE);
     }
 
     public Logger getLogger() {
@@ -41,7 +41,7 @@ public class GeneticAlgorithm {
 
     public String runAlgorithm() {
         logger = new Logger();
-        logger.initialize(functionType, populationSize, generationNumber, crossoverRate, mutationRate);
+        logger.initialize(functionType, selectionType, populationSize, generationNumber, crossoverRate, mutationRate);
         Population myPopulation = new Population(populationSize, true);
         logger.startAlgorithm(myPopulation);
         int generationCount = 1;
@@ -56,80 +56,10 @@ public class GeneticAlgorithm {
     }
 
     private Population evolvePopulation(Population population) {
-        Population population1 = rouletteWheelSelection(population);
+        Population population1 = selection(selectionType, population, logger);
         Population population2 = crossover(population1);
         mutate(population2);
         return population2;
-    }
-
-    private Population rouletteWheelSelection(Population population) {
-        Population newPopulation = new Population(populationSize, false);
-        double totalReversedSum = 0;
-        for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
-            totalReversedSum += (1 / getFunctionValue(chromosomePair));
-        }
-        logger.startSelectionWithSum(totalReversedSum);
-        for (int j = 0; j < populationSize; j++) {
-            double random = Math.random() * totalReversedSum;
-            double partialReversedSum = 0;
-            for (int i = 0; i < populationSize; i++) {
-                ChromosomePair chromosomePair = population.getChromosomePair(i);
-                partialReversedSum += (1 / getFunctionValue(chromosomePair));
-                if (partialReversedSum >= random) {
-                    newPopulation.getChromosomePairs().add(chromosomePair.clone());
-                    logger.runSelection(j + 1, random, i + 1);
-                    break;
-                }
-            }
-        }
-        return newPopulation;
-    }
-
-    private Population rankSelection(Population population) {
-        Population newPopulation = new Population(populationSize, false);
-        population.getChromosomePairs().sort(Comparator.comparingDouble(ChromosomePair::getFunctionValue));
-        Collections.reverse(population.getChromosomePairs());
-        double rankSum = 0;
-        for (int i = 0; i < populationSize; i++) {
-            rankSum += (i + 1);
-        }
-        logger.startSelectionWithSum(rankSum);
-        for (int j = 0; j < populationSize; j++) {
-            double random = Math.random() * rankSum;
-            double partialRankSum = 0;
-            for (int i = 0; i < populationSize; i++) {
-                ChromosomePair chromosomePair = population.getChromosomePair(i);
-                partialRankSum += (i + 1);
-                if (partialRankSum >= random) {
-                    newPopulation.getChromosomePairs().add(chromosomePair.clone());
-                    logger.runSelection(j + 1, random, i + 1);
-                    break;
-                }
-            }
-        }
-        return newPopulation;
-    }
-
-    private Population tournamentSelection(Population population) {
-        logger.startSelection();
-        Population newPopulation = new Population(populationSize, false);
-        for (int j = 0; j < populationSize; j++) {
-            int randomIndex1 = new Random().nextInt(population.getChromosomePairs().size());
-            int randomIndex2 = new Random().nextInt(population.getChromosomePairs().size());
-            while (randomIndex1 == randomIndex2) {
-                randomIndex2 = new Random().nextInt(population.getChromosomePairs().size());
-            }
-            ChromosomePair chromosomePair1 = population.getChromosomePairs().get(randomIndex1);
-            ChromosomePair chromosomePair2 = population.getChromosomePairs().get(randomIndex2);
-            if (chromosomePair1.getFunctionValue() < chromosomePair2.getFunctionValue()) {
-                newPopulation.getChromosomePairs().add(chromosomePair1);
-                logger.runTournamentSelection(j + 1, chromosomePair1, chromosomePair2, chromosomePair1);
-            } else {
-                newPopulation.getChromosomePairs().add(chromosomePair2);
-                logger.runTournamentSelection(j + 1, chromosomePair1, chromosomePair2, chromosomePair2);
-            }
-        }
-        return newPopulation;
     }
 
     private Population crossover(Population population) {
@@ -194,7 +124,7 @@ public class GeneticAlgorithm {
         }
     }
 
-    protected static double getFunctionValue(ChromosomePair chromosomePair) {
+    public static double getFunctionValue(ChromosomePair chromosomePair) {
         double valueX = chromosomePair.getChromosomeX().getDecimalValue();
         double valueY = chromosomePair.getChromosomeY().getDecimalValue();
         return FunctionUtils.getValueInPoint(functionType, valueX, valueY);

@@ -26,7 +26,7 @@ public class Population {
         }
     }
 
-    protected ChromosomePair getChromosomePair(int index) {
+    public ChromosomePair getChromosomePair(int index) {
         return chromosomePairs.get(index);
     }
 

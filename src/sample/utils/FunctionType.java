@@ -9,25 +9,17 @@ public enum FunctionType {
     BOOTHS("Booth's", FunctionType.BOOTHS_DESC),
     THREE_HUMP_CAMEL("Three-hump camel", FunctionType.THREE_HUMP_CAMEL_DESC);
 
-    private final String name;
-    private final String description;
+    public final String name;
+    public final String description;
 
     FunctionType(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
     @Override
     public String toString() {
-        return getName();
+        return name;
     }
 
     private static final String ACKLEYS_DESC = "Optimization for Ackley's function...\n" +

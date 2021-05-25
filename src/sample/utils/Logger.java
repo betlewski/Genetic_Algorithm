@@ -15,12 +15,13 @@ public class Logger {
         return fileHandler;
     }
 
-    public void initialize(FunctionType function, int populationValue, int generationValue,
-                           double crossRateValue, double mutationRateValue) {
-        fileHandler.log(function.getDescription());
+    public void initialize(FunctionType function, SelectionType selectionType, int populationValue,
+                           int generationValue, double crossRateValue, double mutationRateValue) {
+        fileHandler.log(function.description);
         String initialParam = "\n--------------------INITIAL PARAMETERS--------------------\n" +
                 "Population size: " + populationValue + "\n" +
                 "Generation number: " + generationValue + "\n" +
+                "Selection type: " + selectionType + "\n" +
                 "Crossover rate: " + crossRateValue + "\n" +
                 "Mutation rate: " + mutationRateValue + "\n" +
                 "----------------------------------------------------------";
