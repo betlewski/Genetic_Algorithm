@@ -1,4 +1,4 @@
-package sample.utils;
+package sample.ga;
 
 public enum SelectionType {
 

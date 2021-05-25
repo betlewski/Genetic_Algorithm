@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 import sample.utils.FunctionType;
 import sample.ga.GeneticAlgorithm;
 import sample.utils.Logger;
-import sample.utils.SelectionType;
+import sample.ga.SelectionType;
 
 public class Controller {
 

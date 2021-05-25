@@ -36,6 +36,10 @@ public class FileHandler {
         }
     }
 
+    public void newLine() {
+        this.log("");
+    }
+
     public void openFile() {
         try {
             File file = new File(filePath);

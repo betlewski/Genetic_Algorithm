@@ -1,7 +1,6 @@
-package sample.utils;
+package sample.ga;
 
-import sample.ga.ChromosomePair;
-import sample.ga.Population;
+import sample.utils.Logger;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -57,7 +56,7 @@ public class SelectionUtils {
         for (int i = 0; i < populationSize; i++) {
             rankSum += (i + 1);
         }
-        logger.startSelectionWithSum(rankSum);
+        logger.startSelectionWithSumAndSortedPopulation(rankSum, population);
         for (int j = 0; j < populationSize; j++) {
             double random = Math.random() * rankSum;
             double partialRankSum = 0;

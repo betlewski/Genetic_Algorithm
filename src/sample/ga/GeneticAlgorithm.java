@@ -5,7 +5,7 @@ import sample.utils.*;
 
 import java.util.Random;
 
-import static sample.utils.SelectionUtils.selection;
+import static sample.ga.SelectionUtils.selection;
 
 @Data
 public class GeneticAlgorithm {

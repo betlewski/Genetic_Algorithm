@@ -2,6 +2,7 @@ package sample.utils;
 
 import sample.ga.ChromosomePair;
 import sample.ga.Population;
+import sample.ga.SelectionType;
 
 public class Logger {
 
@@ -55,13 +56,20 @@ public class Logger {
         fileHandler.log("\n\n#################### GENERATION " + generationCount + " ####################\n");
     }
 
+    public void startSelection() {
+        fileHandler.log("--------------------SELECTION--------------------\n");
+    }
+
     public void startSelectionWithSum(double totalSum) {
         startSelection();
         fileHandler.log("Total sum: " + totalSum + "\n");
     }
 
-    public void startSelection() {
-        fileHandler.log("--------------------SELECTION--------------------\n");
+    public void startSelectionWithSumAndSortedPopulation(double totalSum, Population population) {
+        startSelectionWithSum(totalSum);
+        fileHandler.log("~~~~~~~~~~ Sorted population ~~~~~~~~~~\n");
+        saveGeneration(population);
+        fileHandler.newLine();
     }
 
     public void runSelection(int order, double randomNumber, int foundIndex) {
