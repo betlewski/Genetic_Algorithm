@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import sample.utils.FunctionType;
 import sample.ga.GeneticAlgorithm;
 import sample.utils.Logger;
+import sample.utils.SelectionType;
 
 public class Controller {
 
@@ -15,6 +16,8 @@ public class Controller {
     private Button openResultsButton;
     @FXML
     private ComboBox<FunctionType> functionComboBox;
+    @FXML
+    private ComboBox<SelectionType> selectionTypeComboBox;
     @FXML
     private Label populationLabel;
     @FXML
@@ -36,6 +39,7 @@ public class Controller {
 
     private GeneticAlgorithm ga = null;
     private static FunctionType functionType = FunctionType.ACKLEYS;
+    private static SelectionType selectionType = SelectionType.ROULETTE_WHEEL;
     private static int populationSize = 10;
     private static int generationNumber = 10;
     private static double crossoverRate = GeneticAlgorithm.DEFAULT_CROSSOVER_RATE;
@@ -44,17 +48,18 @@ public class Controller {
 
     public void initialize() {
         setButtonListeners();
-        initFunctionComboBox();
+        initComboBoxes();
         setSlidersListeners();
     }
 
     private void setButtonListeners() {
         startButton.setOnAction(event1 -> {
-            String beginText = functionType.getDescription() +
+            String beginText = functionType.description +
                     "\n---------------------------------------------------------\n";
             resultsArea.setText(beginText);
             openResultsButton.setDisable(true);
-            ga = new GeneticAlgorithm(functionType, populationSize, generationNumber, crossoverRate, mutationRate);
+            ga = new GeneticAlgorithm(functionType, selectionType, populationSize,
+                    generationNumber, crossoverRate, mutationRate);
             new Thread(() -> {
                 String results = ga.runAlgorithm();
                 resultsArea.appendText(results);
@@ -67,12 +72,18 @@ public class Controller {
         });
     }
 
-    private void initFunctionComboBox() {
+    private void initComboBoxes() {
         FunctionType[] functionTypes = FunctionType.values();
         functionComboBox.setItems(FXCollections.observableArrayList(functionTypes));
         functionComboBox.setValue(FunctionType.ACKLEYS);
         functionComboBox.valueProperty().addListener(
                 (observable, oldValue, actualValue) -> functionType = actualValue);
+
+        SelectionType[] selectionTypes = SelectionType.values();
+        selectionTypeComboBox.setItems(FXCollections.observableArrayList(selectionTypes));
+        selectionTypeComboBox.setValue(SelectionType.ROULETTE_WHEEL);
+        selectionTypeComboBox.valueProperty().addListener(
+                (observable, oldValue, actualValue) -> selectionType = actualValue);
     }
 
     private void setSlidersListeners() {
