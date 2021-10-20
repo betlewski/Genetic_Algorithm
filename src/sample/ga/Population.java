@@ -31,13 +31,13 @@ public class Population {
     }
 
     public ChromosomePair getBest() {
-        ChromosomePair minimum = chromosomePairs.get(0);
+        ChromosomePair best = chromosomePairs.get(0);
         for (int i = 1; i < chromosomePairs.size(); i++) {
-            if (getChromosomePair(i).getFunctionValue() < minimum.getFunctionValue()) {
-                minimum = getChromosomePair(i);
+            if (getChromosomePair(i).getFitness() > best.getFitness()) {
+                best = getChromosomePair(i);
             }
         }
-        return minimum;
+        return best;
     }
 
 }

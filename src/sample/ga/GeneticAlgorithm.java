@@ -1,17 +1,14 @@
 package sample.ga;
 
-import lombok.Data;
 import sample.utils.*;
 
 import java.util.Random;
 
 import static sample.ga.SelectionUtils.selection;
 
-@Data
 public class GeneticAlgorithm {
 
     private Logger logger;
-    private static FunctionType functionType;
     private static SelectionType selectionType;
     private static int populationSize;
     private static int generationNumber;
@@ -23,12 +20,12 @@ public class GeneticAlgorithm {
 
     public GeneticAlgorithm(FunctionType function, SelectionType selection, int populationValue,
                             int generationValue, double crossRateValue, double mutationRateValue) {
-        functionType = function;
         selectionType = selection;
         populationSize = populationValue;
         generationNumber = generationValue;
         crossoverRate = crossRateValue;
         mutationRate = mutationRateValue;
+        FunctionUtils.functionType = function;
     }
 
     public GeneticAlgorithm(FunctionType function, SelectionType selection, int populationValue, int generationValue) {
@@ -41,7 +38,7 @@ public class GeneticAlgorithm {
 
     public String runAlgorithm() {
         logger = new Logger();
-        logger.initialize(functionType, selectionType, populationSize, generationNumber, crossoverRate, mutationRate);
+        logger.initialize(FunctionUtils.functionType, selectionType, populationSize, generationNumber, crossoverRate, mutationRate);
         Population myPopulation = new Population(populationSize, true);
         logger.startAlgorithm(myPopulation);
         int generationCount = 1;
@@ -122,12 +119,6 @@ public class GeneticAlgorithm {
             }
             logger.finishMutation(chromosomePair);
         }
-    }
-
-    public static double getFunctionValue(ChromosomePair chromosomePair) {
-        double valueX = chromosomePair.getChromosomeX().getDecimalValue();
-        double valueY = chromosomePair.getChromosomeY().getDecimalValue();
-        return FunctionUtils.getValueInPoint(functionType, valueX, valueY);
     }
 
 }

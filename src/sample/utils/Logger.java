@@ -39,19 +39,9 @@ public class Logger {
     private void saveGeneration(Population population) {
         int counter = 1;
         for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
-            String generationText = "Chromosome " + counter + ": (value = " + chromosomePair.getFunctionValue() + ")\n"
-                    + " X = " + chromosomePair.getChromosomeX() + "\n"
-                    + " Y = " + chromosomePair.getChromosomeY();
-            fileHandler.log(generationText);
-            counter++;
-        }
-    }
-
-    private void saveGenerationWithReversed(Population population) {
-        int counter = 1;
-        for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
             String generationText = "Chromosome " + counter
-                    + ": (reversed value = " + (1 / chromosomePair.getFunctionValue()) + ")\n"
+                    + ": (value = " + chromosomePair.getFunctionValue()
+                    + ", fitness = " + chromosomePair.getFitness() + ")\n"
                     + " X = " + chromosomePair.getChromosomeX() + "\n"
                     + " Y = " + chromosomePair.getChromosomeY();
             fileHandler.log(generationText);
@@ -72,11 +62,11 @@ public class Logger {
         fileHandler.log("-------------------- SELECTION --------------------\n");
     }
 
-    public void startSelectionWithSumAndReversedPopulation(double totalSum, Population population) {
+    public void startSelectionWithSumAndPopulation(double totalSum, Population population) {
         startSelection();
-        fileHandler.log("Total reversed sum: " + totalSum + "\n");
-        fileHandler.log("~~~~~~~~~~ Reversed values ~~~~~~~~~~\n");
-        saveGenerationWithReversed(population);
+        fileHandler.log("Total sum: " + totalSum + "\n");
+        fileHandler.log("~~~~~~~~~~ Population ~~~~~~~~~~\n");
+        saveGeneration(population);
         fileHandler.newLine();
     }
 
