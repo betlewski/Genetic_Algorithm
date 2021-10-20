@@ -23,10 +23,8 @@ public class SelectionUtils {
     private static Population rouletteWheelSelection(Population population, Logger logger) {
         int populationSize = population.getChromosomePairs().size();
         Population newPopulation = new Population(populationSize, false);
-        double totalSum = 0;
-        for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
-            totalSum += chromosomePair.getFitness();
-        }
+        double totalSum = population.getChromosomePairs().stream()
+                .mapToDouble(ChromosomePair::getFitness).sum();
         logger.startSelectionWithSumAndPopulation(totalSum, population);
         for (int j = 0; j < populationSize; j++) {
             double random = Math.random() * totalSum;

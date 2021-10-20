@@ -41,7 +41,7 @@ public class Controller {
     private static FunctionType functionType = FunctionType.EGGHOLDER;
     private static SelectionType selectionType = SelectionType.ROULETTE_WHEEL;
     private static int populationSize = 10;
-    private static int generationNumber = 10;
+    private static int generationNumber = 100;
     private static double crossoverRate = GeneticAlgorithm.DEFAULT_CROSSOVER_RATE;
     private static double mutationRate = GeneticAlgorithm.DEFAULT_MUTATION_RATE;
     private static final double PRECISION = 100.0;
