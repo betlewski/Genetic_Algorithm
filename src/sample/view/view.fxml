@@ -11,14 +11,14 @@
     <Button fx:id="startButton" layoutX="248.0" layoutY="672.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="180.0" style="-fx-background-radius: 100;" text="START" />
     <Label layoutX="114.0" layoutY="180.0" prefHeight="17.0" prefWidth="130.0" text="Population size:" />
     <ComboBox fx:id="functionComboBox" layoutX="173.0" layoutY="100.0" prefHeight="30.0" prefWidth="250.0" />
-    <Slider fx:id="populationSlider" accessibleText="Population size:" layoutX="111.0" layoutY="204.0" majorTickUnit="20.0" minorTickCount="4" prefHeight="40.0" prefWidth="700.0" showTickLabels="true" showTickMarks="true" value="5.0" />
+    <Slider fx:id="populationSlider" accessibleText="Population size:" layoutX="111.0" layoutY="204.0" majorTickUnit="20.0" minorTickCount="4" prefHeight="40.0" prefWidth="700.0" showTickLabels="true" showTickMarks="true" value="10.0" />
     <Slider fx:id="generationSlider" layoutX="113.0" layoutY="293.0" majorTickUnit="200.0" max="1000.0" minorTickCount="4" prefHeight="40.0" prefWidth="700.0" showTickLabels="true" showTickMarks="true" value="100.0" />
     <Slider fx:id="crossoverSlider" layoutX="115.0" layoutY="384.0" majorTickUnit="0.2" max="1.0" minorTickCount="1" prefHeight="40.0" prefWidth="320.0" showTickLabels="true" showTickMarks="true" value="0.5" />
     <Slider fx:id="mutationSlider" layoutX="494.0" layoutY="383.0" majorTickUnit="0.2" max="1.0" minorTickCount="1" prefHeight="40.0" prefWidth="320.0" showTickLabels="true" showTickMarks="true" value="0.05" />
     <Label layoutX="116.0" layoutY="269.0" prefHeight="17.0" prefWidth="152.0" text="Generation number:" />
     <Label layoutX="120.0" layoutY="359.0" prefHeight="17.0" prefWidth="130.0" text="Crossover rate:" />
     <Label layoutX="499.0" layoutY="359.0" prefHeight="17.0" prefWidth="113.0" text="Mutation rate:" />
-    <Label fx:id="populationLabel" layoutX="226.0" layoutY="180.0" prefHeight="17.0" prefWidth="44.0" text="5" />
+    <Label fx:id="populationLabel" layoutX="226.0" layoutY="180.0" prefHeight="17.0" prefWidth="44.0" text="10" />
     <Label fx:id="generationLabel" layoutX="255.0" layoutY="269.0" prefHeight="17.0" prefWidth="44.0" text="100" />
     <Label fx:id="crossoverLabel" layoutX="227.0" layoutY="359.0" prefHeight="17.0" prefWidth="74.0" text="0.5" />
     <Label fx:id="mutationLabel" layoutX="602.0" layoutY="359.0" prefHeight="17.0" prefWidth="85.0" text="0.05" />

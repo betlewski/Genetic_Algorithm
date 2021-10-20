@@ -38,7 +38,7 @@ public class Controller {
     private TextArea resultsArea;
 
     private GeneticAlgorithm ga = null;
-    private static FunctionType functionType = FunctionType.ACKLEYS;
+    private static FunctionType functionType = FunctionType.EGGHOLDER;
     private static SelectionType selectionType = SelectionType.ROULETTE_WHEEL;
     private static int populationSize = 10;
     private static int generationNumber = 10;
@@ -73,9 +73,9 @@ public class Controller {
     }
 
     private void initComboBoxes() {
-        FunctionType[] functionTypes = FunctionType.values();
+        FunctionType[] functionTypes = FunctionType.types();
         functionComboBox.setItems(FXCollections.observableArrayList(functionTypes));
-        functionComboBox.setValue(FunctionType.ACKLEYS);
+        functionComboBox.setValue(FunctionType.EGGHOLDER);
         functionComboBox.valueProperty().addListener(
                 (observable, oldValue, actualValue) -> functionType = actualValue);
 
