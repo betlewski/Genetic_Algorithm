@@ -2,11 +2,8 @@ package sample.ga;
 
 import sample.utils.Logger;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
-
-import static sample.ga.GeneticAlgorithm.getFunctionValue;
 
 public class SelectionUtils {
 
@@ -26,18 +23,18 @@ public class SelectionUtils {
     private static Population rouletteWheelSelection(Population population, Logger logger) {
         int populationSize = population.getChromosomePairs().size();
         Population newPopulation = new Population(populationSize, false);
-        double totalReversedSum = 0;
+        double totalSum = 0;
         for (ChromosomePair chromosomePair : population.getChromosomePairs()) {
-            totalReversedSum += (1 / getFunctionValue(chromosomePair));
+            totalSum += chromosomePair.getFitness();
         }
-        logger.startSelectionWithSumAndReversedPopulation(totalReversedSum, population);
+        logger.startSelectionWithSumAndPopulation(totalSum, population);
         for (int j = 0; j < populationSize; j++) {
-            double random = Math.random() * totalReversedSum;
-            double partialReversedSum = 0;
+            double random = Math.random() * totalSum;
+            double partialSum = 0;
             for (int i = 0; i < populationSize; i++) {
                 ChromosomePair chromosomePair = population.getChromosomePair(i);
-                partialReversedSum += (1 / getFunctionValue(chromosomePair));
-                if (partialReversedSum >= random) {
+                partialSum += chromosomePair.getFitness();
+                if (partialSum >= random) {
                     newPopulation.getChromosomePairs().add(chromosomePair.clone());
                     logger.runSelection(j + 1, random, i + 1);
                     break;
@@ -50,20 +47,16 @@ public class SelectionUtils {
     private static Population rankSelection(Population population, Logger logger) {
         int populationSize = population.getChromosomePairs().size();
         Population newPopulation = new Population(populationSize, false);
-        population.getChromosomePairs().sort(Comparator.comparingDouble(ChromosomePair::getFunctionValue));
-        Collections.reverse(population.getChromosomePairs());
-        double rankSum = 0;
-        for (int i = 0; i < populationSize; i++) {
-            rankSum += (i + 1);
-        }
+        population.getChromosomePairs().sort(Comparator.comparingDouble(ChromosomePair::getFitness));
+        double rankSum = (1.0 + populationSize) * populationSize / 2.0; // suma ciągu arytmetycznego (1, n)
         logger.startSelectionWithSumAndSortedPopulation(rankSum, population);
         for (int j = 0; j < populationSize; j++) {
             double random = Math.random() * rankSum;
             double partialRankSum = 0;
             for (int i = 0; i < populationSize; i++) {
-                ChromosomePair chromosomePair = population.getChromosomePair(i);
                 partialRankSum += (i + 1);
                 if (partialRankSum >= random) {
+                    ChromosomePair chromosomePair = population.getChromosomePair(i);
                     newPopulation.getChromosomePairs().add(chromosomePair.clone());
                     logger.runSelection(j + 1, random, i + 1);
                     break;
@@ -85,7 +78,7 @@ public class SelectionUtils {
             }
             ChromosomePair chromosomePair1 = population.getChromosomePairs().get(randomIndex1);
             ChromosomePair chromosomePair2 = population.getChromosomePairs().get(randomIndex2);
-            if (chromosomePair1.getFunctionValue() < chromosomePair2.getFunctionValue()) {
+            if (chromosomePair1.getFitness() > chromosomePair2.getFitness()) {
                 newPopulation.getChromosomePairs().add(chromosomePair1);
                 logger.runTournamentSelection(j + 1, chromosomePair1, chromosomePair2, chromosomePair1);
             } else {
