@@ -23,6 +23,8 @@ public class FunctionUtils {
                 return eggholderFunction(x, y);
             case GOLDSTEIN_PRICE:
                 return goldsteinPriceFunction(x, y);
+            case LEVY:
+                return levyFunction(x, y);
             case MCCORMICK:
                 return mcCormickFunction(x, y);
             case RASTRIGIN:
@@ -80,6 +82,18 @@ public class FunctionUtils {
         double p2b = 18 - 32 * x + 12 * Math.pow(x, 2) + 48 * y - 36 * x * y + 27 * Math.pow(y, 2);
         double p2 = 30 + p2a * p2b;
         return (double) Math.round((p1 * p2) * PRECISION) / PRECISION;
+    }
+
+    /**
+     * Perform Levy function N.13.
+     * Domain is [-4, 4]
+     * Minimum is 0 at x = 1 & y = 1.
+     */
+    private static double levyFunction(double x, double y) {
+        double p1 = Math.pow(Math.sin(3 * Math.PI * x), 2);
+        double p2 = Math.pow((x - 1), 2) * (1 + Math.pow(Math.sin(3 * Math.PI * y), 2));
+        double p3 = Math.pow((y - 1), 2) * (1 + Math.pow(Math.sin(2 * Math.PI * y), 2));
+        return (double) Math.round((p1 + p2 + p3) * PRECISION) / PRECISION;
     }
 
     /**
