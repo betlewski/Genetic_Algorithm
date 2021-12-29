@@ -38,8 +38,8 @@ public class Controller {
     private TextArea resultsArea;
 
     private GeneticAlgorithm ga = null;
-    private static FunctionType functionType = FunctionType.EGGHOLDER;
-    private static SelectionType selectionType = SelectionType.ROULETTE_WHEEL;
+    private static FunctionType functionType;
+    private static SelectionType selectionType;
     private static int populationSize = 10;
     private static int generationNumber = 100;
     private static double crossoverRate = GeneticAlgorithm.DEFAULT_CROSSOVER_RATE;
@@ -74,14 +74,16 @@ public class Controller {
 
     private void initComboBoxes() {
         FunctionType[] functionTypes = FunctionType.types();
+        functionType = functionTypes[0];
+        functionComboBox.setValue(functionType);
         functionComboBox.setItems(FXCollections.observableArrayList(functionTypes));
-        functionComboBox.setValue(FunctionType.EGGHOLDER);
         functionComboBox.valueProperty().addListener(
                 (observable, oldValue, actualValue) -> functionType = actualValue);
 
         SelectionType[] selectionTypes = SelectionType.values();
+        selectionType = selectionTypes[0];
+        selectionTypeComboBox.setValue(selectionType);
         selectionTypeComboBox.setItems(FXCollections.observableArrayList(selectionTypes));
-        selectionTypeComboBox.setValue(SelectionType.ROULETTE_WHEEL);
         selectionTypeComboBox.valueProperty().addListener(
                 (observable, oldValue, actualValue) -> selectionType = actualValue);
     }
