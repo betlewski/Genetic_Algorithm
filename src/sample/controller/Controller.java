@@ -69,6 +69,24 @@ public class Controller {
                     logger.getFileHandler().openFile();
                 });
             }).start();
+//            new Thread(() -> new GeneticAlgorithm(FunctionType.RASTRIGIN, SelectionType.ROULETTE_WHEEL, 10,
+//                    generationNumber, crossoverRate, mutationRate).doResearch()).start();
+//            new Thread(() -> new GeneticAlgorithm(FunctionType.RASTRIGIN, SelectionType.ROULETTE_WHEEL, 25,
+//                    generationNumber, crossoverRate, mutationRate).doResearch()).start();
+//            new Thread(() -> new GeneticAlgorithm(FunctionType.RASTRIGIN, SelectionType.ROULETTE_WHEEL, 50,
+//                    generationNumber, crossoverRate, mutationRate).doResearch()).start();
+//            new Thread(() -> new GeneticAlgorithm(FunctionType.RASTRIGIN, SelectionType.RANK, 10,
+//                    generationNumber, crossoverRate, mutationRate).doResearch()).start();
+//            new Thread(() -> new GeneticAlgorithm(FunctionType.RASTRIGIN, SelectionType.RANK, 25,
+//                    generationNumber, crossoverRate, mutationRate).doResearch()).start();
+//            new Thread(() -> new GeneticAlgorithm(FunctionType.RASTRIGIN, SelectionType.RANK, 50,
+//                    generationNumber, crossoverRate, mutationRate).doResearch()).start();
+//            new Thread(() -> new GeneticAlgorithm(FunctionType.RASTRIGIN, SelectionType.TOURNAMENT, 10,
+//                    generationNumber, crossoverRate, mutationRate).doResearch()).start();
+//            new Thread(() -> new GeneticAlgorithm(FunctionType.RASTRIGIN, SelectionType.TOURNAMENT, 25,
+//                    generationNumber, crossoverRate, mutationRate).doResearch()).start();
+//            new Thread(() -> new GeneticAlgorithm(FunctionType.RASTRIGIN, SelectionType.TOURNAMENT, 50,
+//                    generationNumber, crossoverRate, mutationRate).doResearch()).start();
         });
     }
 

@@ -6,8 +6,8 @@ package sample.utils;
 public class FunctionUtils {
 
     public static FunctionType functionType;
-    private static final double MAX = 100000000;
-    private static final int PRECISION = 1000;
+    public static final double MAX = 100000000;
+    public static final int PRECISION = 1000;
 
     public static double getFunctionFitness(double x, double y) {
         return MAX - getValueInPoint(x, y);

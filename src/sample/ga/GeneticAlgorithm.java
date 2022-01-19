@@ -2,6 +2,8 @@ package sample.ga;
 
 import sample.utils.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static sample.ga.SelectionUtils.selection;
@@ -9,11 +11,11 @@ import static sample.ga.SelectionUtils.selection;
 public class GeneticAlgorithm {
 
     private Logger logger;
-    private static SelectionType selectionType;
-    private static int populationSize;
-    private static int generationNumber;
-    private static double crossoverRate;
-    private static double mutationRate;
+    private SelectionType selectionType;
+    private int populationSize;
+    private int generationNumber;
+    private double crossoverRate;
+    private double mutationRate;
 
     public static final double DEFAULT_CROSSOVER_RATE = 0.5;
     public static final double DEFAULT_MUTATION_RATE = 0.05;
@@ -50,6 +52,39 @@ public class GeneticAlgorithm {
         }
         logger.writeResults(myPopulation);
         return logger.getResults(myPopulation);
+    }
+
+    public void doResearch() {
+        final int samples = 1000;
+        List<Double> bestValues = new ArrayList<>();
+        logger = new Logger();
+
+        for (int k = 1; k <= samples; k++) {
+            Population myPopulation = new Population(populationSize, true);
+            int generationCount = 1;
+            double sampleBest = FunctionUtils.MAX;
+            while (generationCount <= generationNumber) {
+                myPopulation = evolvePopulation(myPopulation);
+                double currentBest = myPopulation.getBest().getFunctionValue();
+                if (currentBest < sampleBest) {
+                    sampleBest = currentBest;
+                }
+                generationCount++;
+            }
+            bestValues.add(sampleBest);
+//            System.out.println("---------------------------SAMPLE " + k + "--------------------------");
+//            System.out.println("Best Evaluation: " + sampleBest);
+        }
+        double average = bestValues.stream().mapToDouble(value -> value).sum() / (double) samples;
+        double standDeviation = 0.0;
+        for (double value : bestValues) {
+            standDeviation += Math.pow((value - average), 2);
+        }
+        standDeviation = Math.sqrt(standDeviation / (double) samples);
+        System.out.println("---------------------------COMPLETED-------------------------");
+        System.out.println("Selection Type: " + selectionType + " | Population size: " + populationSize);
+        System.out.println("Average: " + average);
+        System.out.println("Standard Deviation: " + standDeviation);
     }
 
     private Population evolvePopulation(Population population) {
